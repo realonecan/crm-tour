@@ -11,7 +11,7 @@ interface User {
 interface AuthContextType {
   user: User | null
   token: string | null
-  login: () => Promise<void>
+  login: (email: string, password: string) => Promise<void>
   logout: () => void
   isLoading: boolean
 }
@@ -35,9 +35,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  const login = async () => {
+  const login = async (email: string, password: string) => {
     try {
-      const response = await authApi.demoLogin()
+      const response = await authApi.login({ email, password })
       const { token: newToken, user: newUser } = response.data.data
       
       localStorage.setItem('token', newToken)

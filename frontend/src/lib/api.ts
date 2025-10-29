@@ -46,6 +46,8 @@ export interface ApiError {
 
 // Auth API
 export const authApi = {
+  login: (credentials: { email: string; password: string }) =>
+    api.post<ApiResponse<{ token: string; user: any }>>('/auth/login', credentials),
   demoLogin: (role: 'ADMIN' | 'MANAGER' = 'ADMIN') =>
     api.post<ApiResponse<{ token: string; user: any }>>('/auth/demo', { role }),
 }
