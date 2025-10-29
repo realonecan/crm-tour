@@ -30,10 +30,6 @@ export function Login() {
     }
   }
 
-  const handleDemoLogin = (demoEmail: string) => {
-    setEmail(demoEmail)
-    setPassword('demo123')
-  }
 
   return (
     <div className="flex min-h-screen">
@@ -166,35 +162,6 @@ export function Login() {
                 {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
-
-            {/* Demo Accounts */}
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or try demo accounts</span>
-                </div>
-              </div>
-
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => handleDemoLogin('admin@demo.com')}
-                  className="px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-primary transition-colors"
-                >
-                  Admin Demo
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDemoLogin('manager@demo.com')}
-                  className="px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-primary transition-colors"
-                >
-                  Manager Demo
-                </button>
-              </div>
-            </div>
           </div>
 
           <p className="mt-6 text-center text-sm text-gray-600">

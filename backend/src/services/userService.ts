@@ -1,6 +1,7 @@
 import { prisma } from '../prisma/client';
 import { UserRole } from '../../generated/prisma';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 /**
  * Get all users
@@ -54,8 +55,14 @@ export const createUser = async (data: {
   role: UserRole;
   password?: string;
 }) => {
+  // Hash password if provided
+  const hashedPassword = data.password ? await bcrypt.hash(data.password, 10) : undefined;
+  
   return await prisma.user.create({
-    data,
+    data: {
+      ...data,
+      password: hashedPassword,
+    },
     select: {
       id: true,
       name: true,
@@ -107,12 +114,13 @@ export const deleteUser = async (id: number) => {
 export const login = async (email: string, password: string) => {
   const user = await getUserByEmail(email);
 
-  if (!user) {
+  if (!user || !user.password) {
     throw new Error('Invalid email or password');
   }
 
-  // Simple password check (in production, use bcrypt)
-  if (user.password !== password) {
+  // Verify password using bcrypt
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  if (!isValidPassword) {
     throw new Error('Invalid email or password');
   }
 
@@ -148,12 +156,13 @@ export const demoLogin = async (role: UserRole) => {
   let user = await getUserByEmail(email);
 
   if (!user) {
+    const hashedPassword = await bcrypt.hash('demo123', 10);
     user = await prisma.user.create({
       data: {
         name,
         email,
         role,
-        password: 'demo123',
+        password: hashedPassword,
       },
     });
   }
