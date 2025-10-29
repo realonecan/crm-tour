@@ -102,6 +102,42 @@ export const deleteUser = async (id: number) => {
 };
 
 /**
+ * Login with email and password
+ */
+export const login = async (email: string, password: string) => {
+  const user = await getUserByEmail(email);
+
+  if (!user) {
+    throw new Error('Invalid email or password');
+  }
+
+  // Simple password check (in production, use bcrypt)
+  if (user.password !== password) {
+    throw new Error('Invalid email or password');
+  }
+
+  // Generate JWT token
+  const secret = process.env.JWT_SECRET || 'supersecret';
+  const token = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+    secret,
+    { expiresIn: '7d' }
+  );
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    token,
+  };
+};
+
+/**
  * Demo login - generates JWT token
  */
 export const demoLogin = async (role: UserRole) => {
