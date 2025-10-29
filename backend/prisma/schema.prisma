@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Enums
+enum BookingStatus {
+  NEW
+  PAID
+  CANCELLED
+}
+
+enum LeadStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+enum TourStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+}
+
+// Models
+model Category {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  icon      String?
+  color     String?
+
+  tours     Tour[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tour {
+  id           Int        @id @default(autoincrement())
+  title        String
+  slug         String     @unique
+  type         String
+  duration     Int        // in days
+  difficulty   String
+  basePrice    Int
+  status       TourStatus @default(DRAFT)
+  cover        String?
+  gallery      String?    // JSON string array
+  description  String?
+  inclusions   String?    // JSON string array
+  exclusions   String?    // JSON string array
+  meetingPoint String?
+
+  categoryId   Int
+  category     Category   @relation(fields: [categoryId], references: [id])
+
+  tourDates    TourDate[]
+  leads        Lead[]
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([status])
+  @@index([categoryId])
+}
+
+model TourDate {
+  id            Int        @id @default(autoincrement())
+  tourId        Int
+  date          DateTime
+  maxGroupSize  Int
+  priceOverride Int?
+
+  tour          Tour       @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  bookings      Booking[]
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([tourId])
+  @@index([date])
+}
+
+model Customer {
+  id        Int        @id @default(autoincrement())
+  fullName  String
+  phone     String     @unique
+  email     String?
+  telegram  String?
+
+  bookings  Booking[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([phone])
+}
+
+model Booking {
+  id          Int           @id @default(autoincrement())
+  tourDateId  Int
+  customerId  Int
+  people      Int
+  totalPrice  Int
+  status      BookingStatus @default(NEW)
+  note        String?
+
+  tourDate    TourDate   @relation(fields: [tourDateId], references: [id])
+  customer    Customer   @relation(fields: [customerId], references: [id])
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([status])
+  @@index([tourDateId])
+  @@index([customerId])
+}
+
+model Lead {
+  id          Int        @id @default(autoincrement())
+  name        String
+  phone       String
+  email       String?
+  message     String?
+  status      LeadStatus @default(OPEN)
+
+  tourId      Int?
+  tour        Tour?      @relation(fields: [tourId], references: [id])
+
+  assignedTo  Int?
+  assigned    User?      @relation(fields: [assignedTo], references: [id])
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([status])
+  @@index([tourId])
+  @@index([assignedTo])
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String?
+  role      UserRole  @default(MANAGER)
+
+  leads     Lead[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+
