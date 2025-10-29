@@ -9,7 +9,7 @@ export function Bookings() {
   const [statusFilter, setStatusFilter] = useState<string>('All Status')
   const [selectedBooking, setSelectedBooking] = useState<any>(null)
 
-  const { data: bookings, isLoading } = useQuery({
+  const { data: bookings } = useQuery({
     queryKey: ['bookings', statusFilter],
     queryFn: async () => {
       const params: any = {}
@@ -39,18 +39,6 @@ export function Bookings() {
     }
   }
 
-  const getStatusBadgeColor = (status: string) => {
-    switch (status) {
-      case 'NEW':
-        return 'bg-orange-100 text-orange-800'
-      case 'PAID':
-        return 'bg-green-100 text-green-800'
-      case 'CANCELLED':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
 
   return (
     <div>

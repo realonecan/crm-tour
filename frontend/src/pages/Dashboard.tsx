@@ -137,7 +137,7 @@ export function Dashboard() {
                     dataKey="value"
                     label
                   >
-                    {bookingStatusData.map((entry, index) => (
+                    {bookingStatusData.map((_entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>

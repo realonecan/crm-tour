@@ -81,8 +81,8 @@ export function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUserModalPr
             <Label htmlFor="role">Role</Label>
             <Select
               value={formData.role}
-              onValueChange={(value: 'ADMIN' | 'MANAGER') =>
-                setFormData({ ...formData, role: value })
+              onValueChange={(value) =>
+                setFormData({ ...formData, role: value as 'ADMIN' | 'MANAGER' })
               }
             >
               <SelectTrigger className="mt-1">
