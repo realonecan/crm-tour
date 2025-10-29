@@ -1,0 +1,68 @@
+🚀 TOURCRM DEPLOYMENT CHECKLIST
+
+═══════════════════════════════════════════════════════════════
+
+STEP 1: SUPABASE DATABASE SETUP
+───────────────────────────────────────────────────────────────
+1. Go to https://supabase.com/dashboard
+2. Open your project
+3. Click "SQL Editor" → "New Query"
+4. Copy and paste contents from: supabase-setup.sql
+5. Click "Run"
+6. Go to Settings → API and copy:
+   - Project URL
+   - anon/public key
+   - service_role key
+
+═══════════════════════════════════════════════════════════════
+
+STEP 2: DEPLOY BACKEND TO RENDER
+───────────────────────────────────────────────────────────────
+1. Go to https://render.com
+2. New → Web Service
+3. Connect GitHub repo: realonecan/crm-tour
+4. Settings:
+   - Root Directory: backend
+   - Build Command: npm install && npm run build
+   - Start Command: npm start
+5. Environment Variables:
+   DATABASE_URL = [Supabase connection string]
+   JWT_SECRET = [generate random string]
+   NODE_ENV = production
+   PORT = 3000
+6. Click "Create Web Service"
+7. Copy the deployed URL (e.g., https://tourcrm-api.onrender.com)
+
+═══════════════════════════════════════════════════════════════
+
+STEP 3: DEPLOY FRONTEND TO VERCEL
+───────────────────────────────────────────────────────────────
+1. Go to https://vercel.com
+2. Import Project → GitHub → realonecan/crm-tour
+3. Settings:
+   - Root Directory: frontend
+   - Framework Preset: Vite
+   - Build Command: npm run build
+   - Output Directory: dist
+4. Environment Variables:
+   VITE_API_URL = [Your Render backend URL]/api/v1
+5. Click "Deploy"
+6. Copy the deployed URL (e.g., https://tourcrm.vercel.app)
+
+═══════════════════════════════════════════════════════════════
+
+STEP 4: TEST & SHARE
+───────────────────────────────────────────────────────────────
+1. Visit your Vercel URL
+2. Login with: admin@demo.com / demo123
+3. Create a new user in Users section
+4. Share the URL with your friend!
+
+═══════════════════════════════════════════════════════════════
+
+SUPABASE CONNECTION STRING FORMAT:
+postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
+
+Find it in: Supabase → Settings → Database → Connection String
+
+═══════════════════════════════════════════════════════════════
