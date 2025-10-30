@@ -4,6 +4,8 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { Button } from '../components/ui/button'
 import { tourDatesApi, categoriesApi } from '../lib/api'
+import { CreateTourDateModal } from '../components/modals/CreateTourDateModal'
+import { TourDateDetailsModal } from '../components/modals/TourDateDetailsModal'
 
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MONTHS = [
@@ -13,6 +15,8 @@ const MONTHS = [
 
 export function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [selectedTourDate, setSelectedTourDate] = useState<any>(null)
 
   // Fetch tour dates
   const { data: tourDates } = useQuery({
@@ -127,7 +131,7 @@ export function Calendar() {
             </button>
           </div>
 
-          <Button className="bg-primary">
+          <Button className="bg-primary" onClick={() => setIsCreateModalOpen(true)}>
             <Plus className="h-4 w-4" />
             Add Tour Date
           </Button>
@@ -191,6 +195,7 @@ export function Calendar() {
                               backgroundColor: getCategoryColor(tourDate.tour?.categoryId),
                             }}
                             title={`${tourDate.tour?.title} - ${tourDate.tour?.category?.title}`}
+                            onClick={() => setSelectedTourDate(tourDate)}
                           >
                             {tourDate.tour?.title}
                           </div>
@@ -204,6 +209,18 @@ export function Calendar() {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <CreateTourDateModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
+
+      <TourDateDetailsModal
+        isOpen={!!selectedTourDate}
+        onClose={() => setSelectedTourDate(null)}
+        tourDate={selectedTourDate}
+      />
     </div>
   )
 }
