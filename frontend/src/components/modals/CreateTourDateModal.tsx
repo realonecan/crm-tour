@@ -21,7 +21,6 @@ export function CreateTourDateModal({ isOpen, onClose, preselectedDate }: Create
     date: '',
     time: '',
     groupSize: '',
-    availableSeats: '',
     priceOverride: '',
   })
 
@@ -44,7 +43,7 @@ export function CreateTourDateModal({ isOpen, onClose, preselectedDate }: Create
     }
   }, [preselectedDate])
 
-  // Auto-fill seats when tour is selected
+  // Auto-fill group size when tour is selected
   useEffect(() => {
     if (formData.tourId && tours) {
       const selectedTour = tours.find((t: any) => t.id === parseInt(formData.tourId))
@@ -52,7 +51,6 @@ export function CreateTourDateModal({ isOpen, onClose, preselectedDate }: Create
         setFormData(prev => ({
           ...prev,
           groupSize: selectedTour.groupSize?.toString() || '',
-          availableSeats: selectedTour.groupSize?.toString() || '',
         }))
       }
     }
@@ -76,7 +74,6 @@ export function CreateTourDateModal({ isOpen, onClose, preselectedDate }: Create
       date: '',
       time: '',
       groupSize: '',
-      availableSeats: '',
       priceOverride: '',
     })
   }
@@ -89,8 +86,7 @@ export function CreateTourDateModal({ isOpen, onClose, preselectedDate }: Create
     createMutation.mutate({
       tourId: parseInt(formData.tourId),
       date: dateTime,
-      groupSize: parseInt(formData.groupSize),
-      availableSeats: parseInt(formData.availableSeats),
+      maxGroupSize: parseInt(formData.groupSize),
       priceOverride: formData.priceOverride ? parseFloat(formData.priceOverride) : undefined,
     })
   }
@@ -156,32 +152,18 @@ export function CreateTourDateModal({ isOpen, onClose, preselectedDate }: Create
             </div>
           </div>
 
-          {/* Group Size and Available Seats */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="groupSize">Group Size</Label>
-              <Input
-                id="groupSize"
-                type="number"
-                value={formData.groupSize}
-                onChange={(e) => setFormData({ ...formData, groupSize: e.target.value })}
-                className="mt-1"
-                required
-                min="1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="availableSeats">Available Seats</Label>
-              <Input
-                id="availableSeats"
-                type="number"
-                value={formData.availableSeats}
-                onChange={(e) => setFormData({ ...formData, availableSeats: e.target.value })}
-                className="mt-1"
-                required
-                min="0"
-              />
-            </div>
+          {/* Max Group Size */}
+          <div>
+            <Label htmlFor="groupSize">Max Group Size</Label>
+            <Input
+              id="groupSize"
+              type="number"
+              value={formData.groupSize}
+              onChange={(e) => setFormData({ ...formData, groupSize: e.target.value })}
+              className="mt-1"
+              required
+              min="1"
+            />
           </div>
 
           {/* Price Override */}

@@ -37,8 +37,8 @@ export function TourDateDetailsModal({ isOpen, onClose, tourDate }: TourDateDeta
       setFormData({
         date: `${year}-${month}-${day}`,
         time: `${hours}:${minutes}`,
-        groupSize: tourDate.groupSize?.toString() || '',
-        availableSeats: tourDate.availableSeats?.toString() || '',
+        groupSize: tourDate.maxGroupSize?.toString() || '',
+        availableSeats: tourDate.maxGroupSize?.toString() || '',
         priceOverride: tourDate.priceOverride?.toString() || '',
       })
     }
@@ -72,8 +72,7 @@ export function TourDateDetailsModal({ isOpen, onClose, tourDate }: TourDateDeta
     
     updateMutation.mutate({
       date: dateTime,
-      groupSize: parseInt(formData.groupSize),
-      availableSeats: parseInt(formData.availableSeats),
+      maxGroupSize: parseInt(formData.groupSize),
       priceOverride: formData.priceOverride ? parseFloat(formData.priceOverride) : null,
     })
   }
@@ -152,16 +151,10 @@ export function TourDateDetailsModal({ isOpen, onClose, tourDate }: TourDateDeta
               </div>
             </div>
 
-            {/* Group Size and Available Seats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Group Size</Label>
-                <div className="mt-1 text-gray-900">{tourDate.groupSize}</div>
-              </div>
-              <div>
-                <Label>Available Seats</Label>
-                <div className="mt-1 text-gray-900">{tourDate.availableSeats}</div>
-              </div>
+            {/* Group Size */}
+            <div>
+              <Label>Max Group Size</Label>
+              <div className="mt-1 text-gray-900">{tourDate.maxGroupSize}</div>
             </div>
 
             {/* Price */}
@@ -233,32 +226,18 @@ export function TourDateDetailsModal({ isOpen, onClose, tourDate }: TourDateDeta
               </div>
             </div>
 
-            {/* Group Size and Available Seats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="groupSize">Group Size</Label>
-                <Input
-                  id="groupSize"
-                  type="number"
-                  value={formData.groupSize}
-                  onChange={(e) => setFormData({ ...formData, groupSize: e.target.value })}
-                  className="mt-1"
-                  required
-                  min="1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="availableSeats">Available Seats</Label>
-                <Input
-                  id="availableSeats"
-                  type="number"
-                  value={formData.availableSeats}
-                  onChange={(e) => setFormData({ ...formData, availableSeats: e.target.value })}
-                  className="mt-1"
-                  required
-                  min="0"
-                />
-              </div>
+            {/* Max Group Size */}
+            <div>
+              <Label htmlFor="groupSize">Max Group Size</Label>
+              <Input
+                id="groupSize"
+                type="number"
+                value={formData.groupSize}
+                onChange={(e) => setFormData({ ...formData, groupSize: e.target.value })}
+                className="mt-1"
+                required
+                min="1"
+              />
             </div>
 
             {/* Price Override */}
